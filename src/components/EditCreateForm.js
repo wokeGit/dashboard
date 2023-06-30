@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { addUser, editUser } from '../usersReducer';
+import { toast } from 'react-toastify';
 
 const EditCreateForm = () => {
     const navigate = useNavigate()
@@ -27,21 +28,25 @@ const EditCreateForm = () => {
     }, [searchParams, user, setValue])
 
     const takeHighestId = () => {
-        if (user.users) {
+        if (user.users.length) {
             const idList = user.users.map(user => user.id);
             const theHighest = Math.max(...idList)
             return theHighest;
         }
-        return Math.floor(Math.random() * 100000) + 10;
+        return null;
     }
 
     const submitForm = ({ name, email }) => {
         if (isEditForm) {
             const userToEdit = user.users.find(x => x.id === +searchParams.get('userId'))
             dispatch(editUser({ ...userToEdit, name, email }))
+
+            toast(`User ${userToEdit.name} was edited!`)
         } else {
             const highestExistingId = takeHighestId()
             dispatch(addUser({ id: highestExistingId ? highestExistingId + 1 : 1, name, username: name, email, phone: '', website: '', address: {}, company: {} }))
+            
+            toast(`User ${name} was added!`)
         }
         navigate("/");
     }
@@ -65,18 +70,18 @@ const EditCreateForm = () => {
                                     },
                                 })} />
                             {errors.name?.type === "required" && (
-                                <small>The name is required</small>
+                                <small className="text-red-500">The name is required</small>
                             )}
 
                             {errors.name?.type === "minLength" && (
-                                <small>The name should have at least 3 characters</small>
+                                <small className="text-red-500">The name should have at least 3 characters</small>
                             )}
                         </div>
 
                     </div>
                     <div className="flex items-center">
                         <label htmlFor="email" className="w-20 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                        <div className="flex w-full">
+                        <div className="flex flex-col w-full">
                             <input
                                 type="email"
                                 name="email"
@@ -93,7 +98,7 @@ const EditCreateForm = () => {
                                     },
                                 })} />
                             {errors.email?.message && (
-                                <small>{errors.email.message}</small>
+                                <small className="text-red-500">{errors.email.message}</small>
                             )}
                         </div>
                     </div>

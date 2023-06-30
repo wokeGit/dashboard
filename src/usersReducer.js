@@ -34,9 +34,9 @@ export const userSlice = createSlice({
             const sortOrder = action.payload === 'ASC'
             const deepCopyUsers = [...state.users]
             const sortedUsers = deepCopyUsers.sort((a, b) => {
-                if (a.username < b.username)
+                if (a.username.toLowerCase() < b.username.toLowerCase())
                     return sortOrder ? -1 : 1;
-                if (a.username > b.username)
+                if (a.username.toLowerCase() > b.username.toLowerCase())
                     return sortOrder ? 1 : -1;
                 return 0;
             })

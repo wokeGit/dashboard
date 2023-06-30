@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { deleteUser, sortByUserName } from '../usersReducer';
+import { toast } from 'react-toastify';
 
 const UsersList = () => {
     const dispatch = useDispatch()
@@ -26,7 +27,7 @@ const UsersList = () => {
                         <th scope="col" className="px-6 py-3">
                             <div className="flex items-center" onClick={() => {
                                 dispatch(sortByUserName(sortOrder));
-                                setSortOrder(sortOrder === 'ASC' ? 'DESC' : 'ASC')
+                                setSortOrder(sortOrder === 'ASC' ? 'DESC' : 'ASC') 
                             }}>
                                 Username
                                 <div>
@@ -93,7 +94,7 @@ const UsersList = () => {
             {user?.loading && <div className="p-4">Loading...</div>}
 
             {/* Modal */}
-            <div tabIndex="-1" aria-hidden="true" className={`${showModal ? '' : 'hidden'} fixed flex justify-center items-center z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0`}>
+            <div tabIndex="-1" aria-hidden="true" className={`${showModal ? '' : 'hidden'} fixed bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0`}>
                 <div className="relative w-full max-w-md max-h-full">
                     <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                         <button type="button" onClick={() => setShowModal(false)} className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal">
@@ -108,6 +109,7 @@ const UsersList = () => {
                                 <button onClick={() => {
                                     dispatch(deleteUser(userToDelete));
                                     setShowModal(false);
+                                    toast(`User ${userToDelete.name} was deleted!`);
                                 }} className="ml-4 text-white font-bold bg-red-500 hover:bg-red-600 focus:ring-2 focus:outline-none focus:ring-red-300 rounded-lg px-4 py-2">Delete</button>
                             </div>
                         </div>
