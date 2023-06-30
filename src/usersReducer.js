@@ -31,7 +31,16 @@ export const userSlice = createSlice({
             state.users = deepCopyUsers.filter(user => user.id !== action.payload.id)
         },
         sortByUserName: (state, action) => {
-            
+            const sortOrder = action.payload === 'ASC'
+            const deepCopyUsers = [...state.users]
+            const sortedUsers = deepCopyUsers.sort((a, b) => {
+                if (a.username < b.username)
+                    return sortOrder ? -1 : 1;
+                if (a.username > b.username)
+                    return sortOrder ? 1 : -1;
+                return 0;
+            })
+            state.users = sortedUsers
         }
     },
     extraReducers: (builder) => {
@@ -51,6 +60,6 @@ export const userSlice = createSlice({
     }
 })
 
-export const { addUser, editUser, deleteUser } = userSlice.actions
+export const { addUser, editUser, deleteUser, sortByUserName } = userSlice.actions
 
 export default userSlice.reducer
